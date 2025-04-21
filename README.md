@@ -1,7 +1,5 @@
 # Quick Start Guide
 
-## Overview
-
 This repository contains a Math Solver model that can be trained and tested using the provided scripts. Follow the steps below to set up the environment, train the model, and test it on a designated test set.
 
 ## Setup
