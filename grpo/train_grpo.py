@@ -1,8 +1,9 @@
 from unsloth import FastLanguageModel, PatchFastRL
 from trl import GRPOTrainer
-from grpo.data_utils import load_custom_dataset
-from config import training_args
-from reward_funcs import format_reward, tag_count_reward, accuracy_reward, len_reward, cosine_scaled_reward
+from swanlab.integration.transformers import SwanLabCallback
+from .data_utils import load_custom_dataset
+from .config import training_args
+from .reward_funcs import format_reward, tag_count_reward, accuracy_reward, len_reward, cosine_scaled_reward
 import os
 
 PatchFastRL("GRPO", FastLanguageModel)
@@ -40,6 +41,16 @@ def main():
     train_dataset = load_custom_dataset(trainset_path)
     val_dataset = load_custom_dataset(valset_path)
 
+    # Initialize the SwanLab callback
+    swanlab_callback = SwanLabCallback(
+        project="Qwen3-0.6B-grpo",
+        experiment_name="Qwen3-0.6B-grpo",
+        config={
+            "model": os.environ["MODEL_PATH"],
+            "dataset": "custom_dataset",
+        }
+    )
+
     # Initialize the GRPO trainer
     trainer = GRPOTrainer(
         model=model,
@@ -54,6 +65,7 @@ def main():
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         processing_class=tokenizer,
+        callbacks=[swanlab_callback],
     )
 
     # Start training
