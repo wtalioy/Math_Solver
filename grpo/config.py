@@ -1,4 +1,4 @@
-from transformers.utils import is_bfloat16_supported
+from unsloth import is_bfloat16_supported
 from trl import GRPOConfig
 
 class RewardConfig:
@@ -11,10 +11,10 @@ class RewardConfig:
 RewardConfig = RewardConfig()
 
 training_args = GRPOConfig(
-    top_p=0.95,
-    min_p=0,
-    top_k=20,
-    temperature=0.6,
+    # top_p=0.95,
+    # min_p=0,
+    # top_k=20,
+    # temperature=0.6,
 
     use_vllm = True,
     learning_rate = 5e-6,
