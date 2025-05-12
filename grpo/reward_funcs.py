@@ -115,7 +115,7 @@ def len_reward(completions: list[Dict[str, str]], solution: list[str], **kwargs)
         gold_parsed = parse(
             sol,
             extraction_mode="first_match",
-            extraction_config=[LatexExtractionConfig()],
+            # extraction_config=[LatexExtractionConfig()],
         )
         if len(gold_parsed) == 0:
             # Skip unparseable examples
@@ -189,7 +189,7 @@ def cosine_scaled_reward(completions, solution, **kwargs):
         gold_parsed = parse(
             sol,
             extraction_mode="first_match",
-            extraction_config=[LatexExtractionConfig()],
+            # extraction_config=[LatexExtractionConfig()],
         )
         if len(gold_parsed) == 0:
             rewards.append(1.0)  # Skip unparseable examples
