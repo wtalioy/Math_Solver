@@ -28,7 +28,7 @@ def load_custom_dataset(file_path):
                 ]
                 processed_data.append({
                     "prompt": prompt,
-                    "answer": answer
+                    "solution": answer
                 })
     
     dataset = Dataset.from_list(processed_data)
