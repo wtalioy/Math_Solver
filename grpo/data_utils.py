@@ -1,15 +1,6 @@
 import json
 from datasets import Dataset
-
-SYSTEM_PROMPT = """
-请使用中文按以下格式，一步步思考，回答小学数学1-6年级的校内题目，答案不要带单位:
-<reasoning>
-...
-</reasoning>
-<answer>
-...
-</answer>
-"""
+from config import SYSTEM_PROMPT
 
 def load_custom_dataset(file_path):
     """
