@@ -6,6 +6,7 @@ from peft import PeftModel
 from config import SYSTEM_PROMPT
 from math_verify import LatexExtractionConfig, parse, verify
 from latex2sympy2_extended import NormalizationConfig
+from loguru import logger
 
 val_json_path = "data/val.json"
 checkpoint_path = "./outputs/checkpoint-200/"
@@ -37,11 +38,11 @@ def validate_answer(content, sol):
         try:
             is_correct = verify(gold_parsed, answer_parsed)
         except Exception as e:
-            print(f"verify failed: {e}, answer: {answer_parsed}, ground_truth: {gold_parsed}")
+            logger.warning(f"verify failed: {e}, answer: {answer_parsed}, ground_truth: {gold_parsed}")
     else:
         # If the gold solution is not parseable, we assign `None` to skip this example
         is_correct = False
-        print("Failed to parse: ", sol)
+        logger.warning(f"Failed to parse: {sol}")
 
     return is_correct
 
@@ -76,7 +77,6 @@ model = PeftModel.from_pretrained(model, model_id=checkpoint_path)
 correct_count = 0
 total_count = len(val_data)
 for idx, row in enumerate(tqdm(val_data)):
-    instruction = row['instruction']
     input_value = row['question']
     id = row['id']
     
@@ -85,6 +85,9 @@ for idx, row in enumerate(tqdm(val_data)):
         {"role": "user", "content": f"{input_value}"}
     ]
     response = predict(messages, model, tokenizer)
+    logger.info(f"ID: {id}")
+    logger.info(f"Question: {input_value}")
+    logger.info(f"Response: {response}")
     
     if validate_answer(response, row['answer']):
         correct_count += 1
