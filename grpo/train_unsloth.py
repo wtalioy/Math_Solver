@@ -8,7 +8,7 @@ import os
 
 PatchFastRL("GRPO", FastLanguageModel)
 
-max_seq_length = 2048
+max_seq_length = 1024
 max_lora_rank = 32
 
 trainset_path = "data/train_10k.json"
