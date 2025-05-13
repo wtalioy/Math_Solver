@@ -28,8 +28,8 @@ training_args = GRPOConfig(
     # bf16 = is_bfloat16_supported(),
     # fp16 = not is_bfloat16_supported(),
     bf16=True,
-    per_device_train_batch_size = 6,
-    per_device_eval_batch_size = 6,
+    per_device_train_batch_size = 4,
+    per_device_eval_batch_size = 4,
     gradient_accumulation_steps = 4,
     num_generations = 7,
     max_prompt_length = 256,
@@ -48,14 +48,7 @@ training_args = GRPOConfig(
     report_to = "tensorboard",
     logging_dir = "logs", 
     output_dir = "outputs",
+    log_completions=True,
 )
 
-SYSTEM_PROMPT = """
-你是资深的数学专家。请按以下格式，思考并回答小学数学1-6年级的校内题目:
-<think>
-...
-</think>
-<answer>
-...
-</answer>
-"""
+SYSTEM_PROMPT = "You are a helpful math assistant. When the user ask a question, the assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here wrapped with \\box{} </answer>"
