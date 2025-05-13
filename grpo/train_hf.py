@@ -81,6 +81,10 @@ def main():
     # Start training
     trainer.train()
 
+    # Evaluate the model
+    eval_results = trainer.evaluate()
+    print(f"Evaluation results: {eval_results}")
+
     # Save the model
     trainer.save_model(training_args.output_dir)
 
