@@ -8,8 +8,9 @@ from math_verify import LatexExtractionConfig, parse, verify
 from latex2sympy2_extended import NormalizationConfig
 from loguru import logger
 
+model_id_or_path = "models/Qwen3-0.6B/"
 val_json_path = "data/val.json"
-checkpoint_path = "./outputs/checkpoint-200/"
+checkpoint_path = "./outputs/checkpoint-200/"  # Path to the checkpoint if loRA
 
 def validate_answer(content, sol):
     gold_parsed = parse(
@@ -70,9 +71,9 @@ def predict(messages, model, tokenizer):
 with open(val_json_path, 'r', encoding='utf-8') as file:
     val_data = json.load(file)
 
-tokenizer = AutoTokenizer.from_pretrained("models/Qwen3-0.6B/", use_fast=False, trust_remote_code=True)
-model = AutoModelForCausalLM.from_pretrained("models/Qwen3-0.6B/", device_map="auto", torch_dtype=torch.bfloat16)
-model = PeftModel.from_pretrained(model, model_id=checkpoint_path)
+tokenizer = AutoTokenizer.from_pretrained(model_id_or_path, use_fast=False, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(model_id_or_path, device_map="auto", torch_dtype=torch.bfloat16)
+model = PeftModel.from_pretrained(model, model_id=checkpoint_path)  # Load the LoRA model (comment this line if not using LoRA)
 
 correct_count = 0
 total_count = len(val_data)
