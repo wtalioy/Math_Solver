@@ -1,4 +1,3 @@
-from unsloth import is_bfloat16_supported
 from trl import GRPOConfig
 
 class RewardConfig:
@@ -17,7 +16,8 @@ training_args = GRPOConfig(
     # temperature=0.6,
 
     use_vllm = True,
-    learning_rate = 5e-6,
+
+    learning_rate = 4e-5,
     adam_beta1 = 0.9,
     adam_beta2 = 0.99,
     weight_decay = 0.1,
@@ -25,12 +25,13 @@ training_args = GRPOConfig(
     lr_scheduler_type = "cosine",
     optim = "adamw_8bit",
     logging_steps = 1,
-    bf16 = is_bfloat16_supported(),
-    fp16 = not is_bfloat16_supported(),
-    per_device_train_batch_size = 4,
-    per_device_eval_batch_size = 4,
-    gradient_accumulation_steps = 1,
-    num_generations = 8,
+    # bf16 = is_bfloat16_supported(),
+    # fp16 = not is_bfloat16_supported(),
+    bf16=True,
+    per_device_train_batch_size = 6,
+    per_device_eval_batch_size = 6,
+    gradient_accumulation_steps = 4,
+    num_generations = 7,
     max_prompt_length = 256,
     max_completion_length = 1024,
     reward_weights=[
@@ -43,14 +44,14 @@ training_args = GRPOConfig(
 
     max_steps = 200,
     save_steps = 50,
-    max_grad_norm = 0.1,
+    max_grad_norm = 1,
     report_to = "tensorboard",
     logging_dir = "logs", 
     output_dir = "outputs",
 )
 
 SYSTEM_PROMPT = """
-你是资深的数学领域的专家。请按以下格式，一步步思考，回答小学数学1-6年级的校内题目，最终答案不要带单位:
+你是资深的数学专家。请按以下格式，思考并回答小学数学1-6年级的校内题目:
 <think>
 ...
 </think>
