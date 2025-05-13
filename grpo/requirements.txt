@@ -104,6 +104,7 @@ lark==1.2.2
 latex2sympy2_extended==1.10.1
 libmambapy==1.5.8
 lm-format-enforcer==0.10.11
+loguru==0.7.3
 Markdown==3.8
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
