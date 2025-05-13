@@ -18,7 +18,7 @@ trainset_path = "data/train_10k.json"
 valset_path = "data/val.json"
 
 if "MODEL_PATH" not in os.environ:
-    os.environ["MODEL_PATH"] = "./models/Qwen2.5-0.5B-Instruct"
+    os.environ["MODEL_PATH"] = "./models/Qwen3-0.6B"
 
 def main():
     # Initialize the language model
@@ -53,8 +53,8 @@ def main():
 
     # Initialize the SwanLab callback
     swanlab_callback = SwanLabCallback(
-        project="Qwen2.5-0.5B-grpo",
-        experiment_name="Qwen2.5-0.5B-grpo",
+        project="Qwen3-0.6B-GRPO",
+        # experiment_name="Qwen3-0.6B-GRPO",
         config={
             "model": os.environ["MODEL_PATH"],
             "dataset": "custom_dataset",
