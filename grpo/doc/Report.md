@@ -8,6 +8,11 @@
 - **Validation Data Volume:** `2000`
 - **Reward Functions:** `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`
 
+## Baseline performance
+- **Validation Set:** `val.json`
+    - **System Prompt**: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+    - **Accuracy:** `74.04%`
+
 ## Ablation Experiments
 
 ### Raw_5e-5_Latex
@@ -37,6 +42,23 @@
 - `num_generations`: `7`
 - `max_grad_norm`: `0.1`
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
-- Extra modification: refactor the logic of answer extraction which focuses on the response between <answer> </answer> tags.
+- *Extra modification*: refactor the logic of answer extraction which focuses on the response between <answer> </answer> tags.
+
+#### Results
+- Rewards increased slowly as expected. Accuracy reward improved significantly, fluctuating around 0.7
+    ![alt text](image-4.png)
+    ![alt text](image-5.png)
+- On the validation set, the finetuned model generated response following the format required by the system prompt.
+    ![alt text](image-3.png)
+
+### Raw_5e-5_Plain_Len_Reward
+#### Setup
+- `train_dataset`: `raw_10k.json`
+- `learning_rate`: `5e-5`
+- `batch_size`: `28`
+- `num_generations`: `7`
+- `max_grad_norm`: `0.1`
+- `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+- *Extra modification*: add length reward function provided by the Kimi 1.5 tech report, to discourage overthinking and promote token efficiency.
 
 #### Results
