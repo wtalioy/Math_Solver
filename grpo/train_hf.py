@@ -53,12 +53,14 @@ def main():
 
     # Initialize the SwanLab callback
     swanlab_callback = SwanLabCallback(
+        workspace="unknown_ft",
         project="Qwen3-0.6B-GRPO",
         # experiment_name="Qwen3-0.6B-GRPO",
         config={
             "model": os.environ["MODEL_PATH"],
             "dataset": "custom_dataset",
-        }
+        },
+        log_dir="swanlogs",
     )
 
     # Initialize the GRPO trainer
@@ -68,7 +70,7 @@ def main():
             format_reward,
             tag_count_reward,
             accuracy_reward,
-            len_reward,
+            # len_reward,
             cosine_scaled_reward,
         ],
         args=training_args,
@@ -80,10 +82,6 @@ def main():
 
     # Start training
     trainer.train()
-
-    # Evaluate the model
-    eval_results = trainer.evaluate()
-    print(f"Evaluation results: {eval_results}")
 
     # Save the model
     trainer.save_model(training_args.output_dir)
