@@ -17,7 +17,7 @@ training_args = GRPOConfig(
 
     use_vllm = True,
 
-    learning_rate = 4e-5,
+    learning_rate = 5e-5,
     adam_beta1 = 0.9,
     adam_beta2 = 0.99,
     weight_decay = 0.1,
@@ -38,17 +38,17 @@ training_args = GRPOConfig(
         1.0,  # format reward
         1.0,  # tag count reward
         1.0,  # accuracy reward
-        1.0,  # length reward
+        # 1.0,  # length reward
         1.0,  # cosine reward
     ],
 
-    max_steps = 200,
-    save_steps = 50,
-    max_grad_norm = 1,
+    max_steps = 360,
+    save_steps = 40,
+    max_grad_norm = 0.1,
     report_to = "tensorboard",
     logging_dir = "logs", 
-    output_dir = "outputs",
+    output_dir = "outputs/Qwen3-0.6B-GRPO-plain",
     log_completions=True,
 )
 
-SYSTEM_PROMPT = "You are a helpful math assistant. When the user ask a question, the assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here wrapped with \\box{} </answer>"
+SYSTEM_PROMPT = "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
