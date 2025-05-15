@@ -4,13 +4,13 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 from config import SYSTEM_PROMPT
-from math_verify import LatexExtractionConfig, parse, verify
-from latex2sympy2_extended import NormalizationConfig
+from math_verify import ExprExtractionConfig, parse, verify
+import re
 from loguru import logger
 
 model_id_or_path = "models/Qwen3-0.6B/"
 val_json_path = "data/val.json"
-checkpoint_path = "./outputs/checkpoint-200/"  # Path to the checkpoint if loRA
+checkpoint_path = "./outputs/Qwen3-0.6B-GRPO-latex/"  # Path to the checkpoint if loRA
 
 def validate_answer(content, sol):
     gold_parsed = parse(
@@ -18,25 +18,19 @@ def validate_answer(content, sol):
         extraction_mode="first_match",
     )
     if len(gold_parsed) != 0:
+        match = re.search(r"<answer>(.*?)</answer>", content, re.DOTALL)
+        if match:
+            answer_text = match.group(1).strip()
+        else:
+            answer_text = content
         answer_parsed = parse(
-            content,
-            extraction_config=[
-                LatexExtractionConfig(
-                    normalization_config=NormalizationConfig(
-                        nits=False,
-                        malformed_operators=False,
-                        basic_latex=True,
-                        equations=True,
-                        boxed="all",
-                        units=True,
-                    ),
-                    boxed_match_priority=0,
-                    try_extract_without_anchor=False,
-                )
-            ],
+            answer_text,
+            extraction_config=[ExprExtractionConfig()],
             extraction_mode="first_match",
         )
         try:
+            logger.info(f"Answer parsed: {answer_parsed}")
+            logger.info(f"Ground truth parsed: {gold_parsed}")
             is_correct = verify(gold_parsed, answer_parsed)
         except Exception as e:
             logger.warning(f"verify failed: {e}, answer: {answer_parsed}, ground_truth: {gold_parsed}")
@@ -58,7 +52,7 @@ def predict(messages, model, tokenizer):
 
     generated_ids = model.generate(
         model_inputs.input_ids,
-        max_new_tokens=1024,
+        max_new_tokens=2048,
     )
 
     output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist() 
@@ -85,12 +79,17 @@ for idx, row in enumerate(tqdm(val_data)):
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": f"{input_value}"}
     ]
-    response = predict(messages, model, tokenizer)
     logger.info(f"ID: {id}")
     logger.info(f"Question: {input_value}")
+
+    response = predict(messages, model, tokenizer)
     logger.info(f"Response: {response}")
     
     if validate_answer(response, row['answer']):
         correct_count += 1
+        logger.info("Correct")
+    else:
+        logger.info("Incorrect")
+        
 
 print(f"Accuracy: {correct_count / total_count * 100:.2f}%")

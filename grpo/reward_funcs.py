@@ -1,13 +1,12 @@
 import math
 import re
-from math_verify import LatexExtractionConfig, parse, verify
-from latex2sympy2_extended import NormalizationConfig
+from math_verify import ExprExtractionConfig, parse, verify
 from typing import Dict, Optional
 from config import RewardConfig
 
 def format_reward(completions, **kwargs):
     """Reward function that checks if the reasoning process is enclosed within <think> and </think> tags, while the final answer is enclosed within <answer> and </answer> tags."""
-    pattern = r"^<think>\n.*?\n</think>\n<answer>\n.*?\n</answer>$"
+    pattern = r"^<think>\n.*?\n</think>\n<answer>.*?</answer>$"
     completion_contents = [completion[0]["content"] for completion in completions]
     matches = [re.match(pattern, content, re.DOTALL | re.MULTILINE) for content in completion_contents]
     return [1.0 if match else 0.0 for match in matches]
@@ -24,9 +23,9 @@ def tag_count_reward(completions, **kwargs) -> list[float]:
             count += 0.25
         if text.count("\n</think>\n") == 1:
             count += 0.25
-        if text.count("\n<answer>\n") == 1:
+        if text.count("\n<answer>") == 1:
             count += 0.25
-        if text.count("\n</answer>") == 1:
+        if text.count("</answer>") == 1:
             count += 0.25
         return count
 
@@ -35,6 +34,7 @@ def tag_count_reward(completions, **kwargs) -> list[float]:
 
 def accuracy_reward(completions: list[list[dict[str, str]]], solution: list[str], **kwargs) -> list[Optional[float]]:
     """Reward function that checks if the completion is the same as the ground truth."""
+    import re
     contents = [completion[0]["content"] for completion in completions]
     rewards = []
     for content, sol in zip(contents, solution):
@@ -43,24 +43,14 @@ def accuracy_reward(completions: list[list[dict[str, str]]], solution: list[str]
             extraction_mode="first_match",
         )
         if len(gold_parsed) != 0:
-            # We require the answer to be provided in correct latex (no malformed operators)
+            match = re.search(r"<answer>(.*?)</answer>", content, re.DOTALL)
+            if match:
+                answer_text = match.group(1).strip()
+            else:
+                answer_text = content
             answer_parsed = parse(
-                content,
-                extraction_config=[
-                    LatexExtractionConfig(
-                        normalization_config=NormalizationConfig(
-                            nits=False,
-                            malformed_operators=False,
-                            basic_latex=True,
-                            equations=True,
-                            boxed="all",
-                            units=True,
-                        ),
-                        # Ensures that boxed is tried first
-                        boxed_match_priority=0,
-                        try_extract_without_anchor=False,
-                    )
-                ],
+                answer_text,
+                extraction_config=[ExprExtractionConfig()],
                 extraction_mode="first_match",
             )
             # Compute binary rewards if verifiable, `None` otherwise to skip this example
@@ -123,22 +113,20 @@ def len_reward(completions: list[Dict[str, str]], solution: list[str], **kwargs)
             print("Failed to parse gold solution: ", sol)
             continue
 
+        match = re.search(r"<answer>(.*?)</answer>", content, re.DOTALL)
+        if match:
+            answer_text = match.group(1).strip()
+        else:
+            answer_text = content
+        answer_parsed = parse(
+            answer_text,
+            extraction_config=[ExprExtractionConfig()],
+            extraction_mode="first_match",
+        )
+
         answer_parsed = parse(
             content,
-            extraction_config=[
-                LatexExtractionConfig(
-                    normalization_config=NormalizationConfig(
-                        nits=False,
-                        malformed_operators=False,
-                        basic_latex=True,
-                        equations=True,
-                        boxed=True,
-                        units=True,
-                    ),
-                    boxed_match_priority=0,
-                    try_extract_without_anchor=False,
-                )
-            ],
+            extraction_config=[ExprExtractionConfig()],
             extraction_mode="first_match",
         )
         correctness.append(verify(answer_parsed, gold_parsed))
@@ -196,22 +184,14 @@ def cosine_scaled_reward(completions, solution, **kwargs):
             print("Failed to parse gold solution: ", sol)
             continue
 
+        match = re.search(r"<answer>(.*?)</answer>", content, re.DOTALL)
+        if match:
+            answer_text = match.group(1).strip()
+        else:
+            answer_text = content
         answer_parsed = parse(
-            content,
-            extraction_config=[
-                LatexExtractionConfig(
-                    normalization_config=NormalizationConfig(
-                        nits=False,
-                        malformed_operators=False,
-                        basic_latex=True,
-                        equations=True,
-                        boxed=True,
-                        units=True,
-                    ),
-                    boxed_match_priority=0,
-                    try_extract_without_anchor=False,
-                )
-            ],
+            answer_text,
+            extraction_config=[ExprExtractionConfig()],
             extraction_mode="first_match",
         )
 
