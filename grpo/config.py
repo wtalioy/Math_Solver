@@ -1,5 +1,7 @@
 from trl import GRPOConfig
 
+experiment_name = "Qwen3-0.6B-GRPO-w/len_reward"
+
 class RewardConfig:
     cosine_max_len = 1000
     cosine_min_value_wrong = -1.0
@@ -10,10 +12,6 @@ class RewardConfig:
 RewardConfig = RewardConfig()
 
 training_args = GRPOConfig(
-    # top_p=0.95,
-    # min_p=0,
-    # top_k=20,
-    # temperature=0.6,
 
     use_vllm = True,
 
@@ -28,17 +26,18 @@ training_args = GRPOConfig(
     # bf16 = is_bfloat16_supported(),
     # fp16 = not is_bfloat16_supported(),
     bf16=True,
+    dataloader_num_workers=8,
     per_device_train_batch_size = 4,
     per_device_eval_batch_size = 4,
     gradient_accumulation_steps = 4,
-    num_generations = 7,
+    num_generations = 6,
     max_prompt_length = 256,
     max_completion_length = 1024,
     reward_weights=[
         1.0,  # format reward
         1.0,  # tag count reward
         1.0,  # accuracy reward
-        # 1.0,  # length reward
+        1.0,  # length reward
         1.0,  # cosine reward
     ],
 
@@ -46,8 +45,8 @@ training_args = GRPOConfig(
     save_steps = 40,
     max_grad_norm = 0.1,
     report_to = "tensorboard",
-    logging_dir = "logs", 
-    output_dir = "outputs/Qwen3-0.6B-GRPO-plain",
+    logging_dir = f"logs/{experiment_name}",
+    output_dir = f"outputs/{experiment_name}",
     log_completions=True,
 )
 

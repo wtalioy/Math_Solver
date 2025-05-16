@@ -7,7 +7,7 @@ from peft import get_peft_model, LoraConfig
 from swanlab.integration.transformers import SwanLabCallback
 
 from data_utils import load_custom_dataset
-from config import training_args
+from config import training_args, experiment_name
 from reward_funcs import format_reward, tag_count_reward, accuracy_reward, len_reward, cosine_scaled_reward
 import os
 
@@ -52,16 +52,18 @@ def main():
     val_dataset = load_custom_dataset(valset_path)
 
     # Initialize the SwanLab callback
-    swanlab_callback = SwanLabCallback(
-        workspace="unknown_ft",
-        project="Qwen3-0.6B-GRPO",
-        # experiment_name="Qwen3-0.6B-GRPO",
-        config={
+    swanlab_config = {
+        "workspace": "unknown_ft",
+        "project": "Qwen3-0.6B-GRPO",
+        "experiment_name": experiment_name,
+        "config": {
             "model": os.environ["MODEL_PATH"],
             "dataset": "custom_dataset",
         },
-        log_dir="swanlogs",
-    )
+        "log_dir": "swanlogs",
+    }
+
+    swanlab_callback = SwanLabCallback(**swanlab_config)
 
     # Initialize the GRPO trainer
     trainer = GRPOTrainer(
@@ -70,7 +72,7 @@ def main():
             format_reward,
             tag_count_reward,
             accuracy_reward,
-            # len_reward,
+            len_reward,
             cosine_scaled_reward,
         ],
         args=training_args,
