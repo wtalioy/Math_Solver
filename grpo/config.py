@@ -1,6 +1,6 @@
 from trl import GRPOConfig
 
-experiment_name = "Qwen3-0.6B-GRPO-w/len_reward"
+experiment_name = "Qwen3-0.6B-GRPO-r16-official-sampling"
 
 class RewardConfig:
     cosine_max_len = 1000
@@ -12,6 +12,11 @@ class RewardConfig:
 RewardConfig = RewardConfig()
 
 training_args = GRPOConfig(
+    temperature=0.6,
+    top_p=0.95,
+    top_k=20,
+    min_p=0,
+    presence_penalty=1.5,  # comment this line as current trl does not support presence_penalty
 
     use_vllm = True,
 
