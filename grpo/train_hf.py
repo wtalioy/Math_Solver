@@ -12,9 +12,9 @@ from reward_funcs import format_reward, tag_count_reward, accuracy_reward, len_r
 import os
 
 max_seq_length = 1024
-max_lora_rank = 32
+max_lora_rank = 16
 
-trainset_path = "data/train_10k.json"
+trainset_path = "data/raw_10k.json"
 valset_path = "data/val.json"
 
 if "MODEL_PATH" not in os.environ:
