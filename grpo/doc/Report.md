@@ -6,7 +6,6 @@
 - **Training Method:** `LoRA`
 - **Training Data Volume:** `10000`
 - **Validation Data Volume:** `2000`
-- **Reward Functions:** `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`
 
 ## Baseline performance
 - **Validation Set:** `val.json`
@@ -24,6 +23,7 @@
 - `batch_size`: `28`
 - `num_generations`: `7`
 - `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`
 - `system_prompt`: "You are a helpful math assistant. When the user ask a question, the assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within <think> </think> and <answer> </answer> tags, respectively, i.e.,\n<think>\nreasoning process here\n</think>\n<answer> answer here wrapped in \\boxed{} </answer>"
 
 #### Results
@@ -43,6 +43,7 @@
 - `batch_size`: `28`
 - `num_generations`: `7`
 - `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
 - *Extra modification*: refactor the logic of answer extraction which focuses on the response between <answer> </answer> tags.
 
@@ -63,6 +64,7 @@
 - `batch_size`: `24`
 - `num_generations`: `6`
 - `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
 
 #### Results
@@ -77,6 +79,7 @@
 - `batch_size`: `24`
 - `num_generations`: `6`
 - `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
 - *Extra modification*: add length reward function provided by the Kimi 1.5 tech report, to discourage overthinking and promote token efficiency.
 
@@ -92,6 +95,41 @@
 - `batch_size`: `24`
 - `num_generations`: `6`
 - `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+
+#### Results
+- Significant improvement is seen in all reward functions, yet `74.79%` accuracy on the validation set is still lower than the baseline performance of `76.98%`.
+    ![alt text](image-8.png)
+
+### Raw_r8
+#### Setup
+- `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `8`
+- `learning_rate`: `5e-5`
+- `batch_size`: `24`
+- `num_generations`: `6`
+- `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`
+- `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+
+#### Results
+- Training rewards resemble those of `max_lora_rank=16`, yet the accuracy on the validation set is `74.09%`.
+    ![alt text](image-9.png)
+
+### Raw_r16_official_sampling
+- `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `8`
+- `learning_rate`: `5e-5`
+- `batch_size`: `24`
+- `num_generations`: `6`
+- `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`
+- `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+- *Extra modification*: use official sampling method to generate the response instead of greedy search.
+    - `temperature`: `0.9`
+    - `top_p`: `0.95`
+    - `top_k`: `20`
+    - `min_p`: `0`
 
 #### Results
