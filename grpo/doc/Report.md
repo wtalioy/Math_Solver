@@ -11,7 +11,7 @@
 ## Baseline performance
 - **Validation Set:** `val.json`
     - **System Prompt**: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
-    - **Accuracy:** `74.04%`
+    - **Accuracy:** `76.98%`
 
 ## Ablation Experiments
 
@@ -19,6 +19,7 @@
 
 #### Setup
 - `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `32`
 - `learning_rate`: `5e-5`
 - `batch_size`: `28`
 - `num_generations`: `7`
@@ -33,10 +34,11 @@
     ![alt text](image-1.png)
     ![alt text](image-2.png)
 
-### Raw_5e-5_Plain
+### Raw_5e-5_Plain_ng7_bs28
 
 #### Setup
 - `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `32`
 - `learning_rate`: `5e-5`
 - `batch_size`: `28`
 - `num_generations`: `7`
@@ -50,15 +52,46 @@
     ![alt text](image-5.png)
 - On the validation set, the finetuned model generated response following the format required by the system prompt.
     ![alt text](image-3.png)
+- However, the finetuned model only achieved an accuracy of `73.84%` on the validation set, which is lower than the baseline performance of `76.98%`. This indicates that the model's performance has not improved after finetuning.
+
+### Raw_5e-5_Plain_ng6_bs24
+
+#### Setup
+- `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `32`
+- `learning_rate`: `5e-5`
+- `batch_size`: `24`
+- `num_generations`: `6`
+- `max_grad_norm`: `0.1`
+- `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+
+#### Results
+- Slight difference in the reward function, while `num_generations=6, batch_size=24` is even a little bit better than `num_generations=7, batch_size=28`.
+    ![alt text](image-6.png)
 
 ### Raw_5e-5_Plain_Len_Reward
 #### Setup
 - `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `32`
 - `learning_rate`: `5e-5`
-- `batch_size`: `28`
-- `num_generations`: `7`
+- `batch_size`: `24`
+- `num_generations`: `6`
 - `max_grad_norm`: `0.1`
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
 - *Extra modification*: add length reward function provided by the Kimi 1.5 tech report, to discourage overthinking and promote token efficiency.
+
+#### Results
+- Total reward seems a little better than the previous one, with an accuracy of `74.64%` on the validation set.
+    ![alt text](image-7.png)
+
+### Raw_r16
+#### Setup
+- `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `16`
+- `learning_rate`: `5e-5`
+- `batch_size`: `24`
+- `num_generations`: `6`
+- `max_grad_norm`: `0.1`
+- `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
 
 #### Results
