@@ -49,7 +49,6 @@ def main():
 
     # Load the dataset
     train_dataset = load_custom_dataset(trainset_path)
-    val_dataset = load_custom_dataset(valset_path)
 
     # Initialize the SwanLab callback
     swanlab_config = {
@@ -77,7 +76,7 @@ def main():
         ],
         args=training_args,
         train_dataset=train_dataset,
-        eval_dataset=val_dataset,
+        eval_dataset=None,
         processing_class=tokenizer,
         callbacks=[swanlab_callback],
     )
