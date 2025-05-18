@@ -4,13 +4,19 @@
 - **Pretrained Model:** `Qwen3-0.6B(Instruct)`
 - **Training Framework:** `Huggingface` + `Trl` + `Accelerate`
 - **Training Method:** `LoRA`
-- **Training Data Volume:** `10000`
-- **Validation Data Volume:** `2000`
+- **Training Set Size:** `10000`
 
 ## Baseline performance
-- **Validation Set:** `val.json`
-    - **System Prompt**: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
-    - **Accuracy:** `76.98%`
+- **Validation Set:** 
+    - `val.json`
+        - **Size:** `2000`
+        - **System Prompt**: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+        - **Accuracy:** `74.04%`
+    - `val_200.json`
+        - **Size:** `200`
+        - **System Prompt**: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+        - **Accuracy:** `74.00%`
+
 
 ## Ablation Experiments
 
@@ -53,7 +59,7 @@
     ![alt text](image-5.png)
 - On the validation set, the finetuned model generated response following the format required by the system prompt.
     ![alt text](image-3.png)
-- However, the finetuned model only achieved an accuracy of `73.84%` on the validation set, which is lower than the baseline performance of `76.98%`. This indicates that the model's performance has not improved after finetuning.
+- However, the finetuned model only achieved an accuracy of `73.84%` on the validation set, which is lower than the baseline performance of `74.04%`.
 
 ### Raw_5e-5_Plain_ng6_bs24
 
@@ -84,8 +90,9 @@
 - *Extra modification*: add length reward function provided by the Kimi 1.5 tech report, to discourage overthinking and promote token efficiency.
 
 #### Results
-- Total reward seems a little better than the previous one, with an accuracy of `74.64%` on the validation set.
+- Total reward seems a little better than the previous one.
     ![alt text](image-7.png)
+- `val.json` accuracy: `74.64%`
 
 ### Raw_r16
 #### Setup
@@ -99,8 +106,10 @@
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
 
 #### Results
-- Significant improvement is seen in all reward functions, yet `74.79%` accuracy on the validation set is still lower than the baseline performance of `76.98%`.
+- Significant improvement is seen in all reward functions.
     ![alt text](image-8.png)
+- `val.json` accuracy: `74.79%`
+- `val_200.json` accuracy: `81.00%`
 
 ### Raw_r8
 #### Setup
@@ -114,8 +123,9 @@
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
 
 #### Results
-- Training rewards resemble those of `max_lora_rank=16`, yet the accuracy on the validation set is `74.09%`.
+- Training rewards resemble those of `max_lora_rank=16`.
     ![alt text](image-9.png)
+- `val.json` accuracy: `74.09%`
 
 ### Raw_r16_official_sampling
 - `train_dataset`: `raw_10k.json`
@@ -133,3 +143,6 @@
     - `min_p`: `0`
 
 #### Results
+- Training rewards showed no significant difference.
+    ![alt text](image-10.png)
+- `val.json` accuracy: `71.19%`
