@@ -59,6 +59,7 @@ def predict(messages, model, tokenizer):
     generated_ids = model.generate(
         model_inputs.input_ids,
         max_new_tokens=2048,
+        temperature=0,
     )
 
     output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist() 
@@ -82,6 +83,7 @@ def predict_batch(messages_list, model, tokenizer, batch_size=8, max_new_tokens=
             model_inputs.input_ids,
             attention_mask=model_inputs.attention_mask,
             max_new_tokens=max_new_tokens,
+            temperature=0,
         )
         for j, input_ids in enumerate(model_inputs.input_ids):
             output_ids = generated_ids[j][len(input_ids):].tolist()
