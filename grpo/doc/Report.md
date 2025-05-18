@@ -7,15 +7,12 @@
 - **Training Set Size:** `10000`
 
 ## Baseline performance
-- **Validation Set:** 
-    - `val.json`
-        - **Size:** `2000`
-        - **System Prompt**: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
-        - **Accuracy:** `74.04%`
+- **Validation Set Accuracy:** 
+    - `val_2k.json`
+        - "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>": `74.04%`
     - `val_200.json`
-        - **Size:** `200`
-        - **System Prompt**: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
-        - **Accuracy:** `74.00%`
+        - "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>": `74.00%`
+        - "这是小学数学1-6年级的校内题目，无需进行分析，请直接输出数字答案，不带单位。": `75.00%`
 
 
 ## Ablation Experiments
@@ -128,6 +125,7 @@
 - `val.json` accuracy: `74.09%`
 
 ### Raw_r16_official_sampling
+#### Setup
 - `train_dataset`: `raw_10k.json`
 - `max_lora_rank`: `8`
 - `learning_rate`: `5e-5`
@@ -146,3 +144,25 @@
 - Training rewards showed no significant difference.
     ![alt text](image-10.png)
 - `val.json` accuracy: `71.19%`
+
+### Raw_r16_cosine_modified
+#### Setup
+- `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `8`
+- `learning_rate`: `5e-5`
+- `batch_size`: `24`
+- `num_generations`: `6`
+- `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`
+- `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+- *Extra modification*: modify the hyperparameters of cosine reward function
+    - `cosine_max_len`: `1000`
+    - `cosine_min_value_wrong`: `-10.0`
+    - `cosine_max_value_wrong`: `0`
+    - `cosine_min_value_correct`: `2.0`
+    - `cosine_max_value_correct`: `1.0`
+
+#### Results
+- Performance at response format dropped a little bit.
+    ![alt text](image-11.png)
+- `val_200.json` accuracy: `80.50%`
