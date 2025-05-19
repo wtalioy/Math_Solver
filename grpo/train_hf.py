@@ -7,12 +7,11 @@ from peft import get_peft_model, LoraConfig
 from swanlab.integration.transformers import SwanLabCallback
 
 from data_utils import load_custom_dataset
-from config import training_args, experiment_name
-from reward_funcs import format_reward, tag_count_reward, accuracy_reward, len_reward, cosine_scaled_reward
+from config import training_args, experiment_name, max_lora_rank
+from reward_funcs import format_reward, tag_count_reward, accuracy_reward, len_reward, cosine_scaled_reward, get_repetition_penalty_reward
 import os
 
 max_seq_length = 1024
-max_lora_rank = 16
 
 trainset_path = "data/raw_10k.json"
 valset_path = "data/val.json"
@@ -73,6 +72,7 @@ def main():
             accuracy_reward,
             len_reward,
             cosine_scaled_reward,
+            get_repetition_penalty_reward(40, -0.05)
         ],
         args=training_args,
         train_dataset=train_dataset,
@@ -86,7 +86,6 @@ def main():
 
     # Save the model
     trainer.save_model(training_args.output_dir)
-
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,8 @@
 from trl import GRPOConfig
 
-experiment_name = "Qwen3-0.6B-GRPO-r16-official-sampling"
+experiment_name = "Qwen3-0.6B-GRPO-r32-repetition-penalty"
+
+max_lora_rank = 32
 
 class RewardConfig:
     cosine_max_len = 1000
@@ -12,12 +14,6 @@ class RewardConfig:
 RewardConfig = RewardConfig()
 
 training_args = GRPOConfig(
-    temperature=0.6,
-    top_p=0.95,
-    top_k=20,
-    min_p=0,
-    presence_penalty=1.5,  # comment this line as current trl does not support presence_penalty
-
     use_vllm = True,
 
     learning_rate = 5e-5,
@@ -44,15 +40,15 @@ training_args = GRPOConfig(
         1.0,  # accuracy reward
         1.0,  # length reward
         1.0,  # cosine reward
+        1.0,  # repetition penalty reward
     ],
 
     max_steps = 360,
-    save_steps = 40,
     max_grad_norm = 0.1,
     report_to = "tensorboard",
     logging_dir = f"logs/{experiment_name}",
     output_dir = f"outputs/{experiment_name}",
-    log_completions=True,
+    # log_completions=True,
 )
 
 SYSTEM_PROMPT = "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
