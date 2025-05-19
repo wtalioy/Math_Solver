@@ -9,11 +9,15 @@
 ## Baseline performance
 - **Validation Set Accuracy:** 
     - `val_2k.json`
-        - "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>": `74.04%`
+        - "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>": `73.39%`
     - `val_200.json`
         - "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>": `74.00%`
-        - "这是小学数学1-6年级的校内题目，无需进行分析，请直接输出数字答案，不带单位。": `75.00%`
+        - "这是小学数学1-6年级的校内题目，无需进行分析，请直接输出数字答案，不带单位。": `74.50%`
+        - "You are a helpful Math assistant. 这是小学数学1-6年级的校内题目，请直接输出数字答案，不带单位。": `76.00%`
 
+## Problems
+- The task of solving math problems is extremely sensitive to the randomness of model generation, as the model may take different inference paths, leading to different results and, importantly, high variation in accuracy on validation sets.
+- To address this, one effective way is greedy search (or nearly greedy search), i.e., set `temperature` to `0`.
 
 ## Ablation Experiments
 
@@ -56,7 +60,7 @@
     ![alt text](image-5.png)
 - On the validation set, the finetuned model generated response following the format required by the system prompt.
     ![alt text](image-3.png)
-- However, the finetuned model only achieved an accuracy of `73.84%` on the validation set, which is lower than the baseline performance of `74.04%`.
+- However, the finetuned model only achieved an accuracy of `73.84%` on `val_2k.json`.
 
 ### Raw_5e-5_Plain_ng6_bs24
 
@@ -89,7 +93,8 @@
 #### Results
 - Total reward seems a little better than the previous one.
     ![alt text](image-7.png)
-- `val.json` accuracy: `74.64%`
+- `val_2k.json` accuracy: `74.64%` *(not reliable)*
+- `val_200.json` accuracy: `76.00%`
 
 ### Raw_r16
 #### Setup
@@ -105,8 +110,8 @@
 #### Results
 - Significant improvement is seen in all reward functions.
     ![alt text](image-8.png)
-- `val.json` accuracy: `74.79%`
-- `val_200.json` accuracy: `81.00%`
+- `val_2k.json` accuracy: `74.79%` *(not reliable)*
+- `val_200.json` accuracy: `74.00%`
 
 ### Raw_r8
 #### Setup
@@ -122,7 +127,8 @@
 #### Results
 - Training rewards resemble those of `max_lora_rank=16`.
     ![alt text](image-9.png)
-- `val.json` accuracy: `74.09%`
+- `val.json` accuracy: `74.09%` *(not reliable)*
+- `val_200.json` accuracy: `75.50%`
 
 ### Raw_r16_official_sampling
 #### Setup
@@ -134,7 +140,7 @@
 - `max_grad_norm`: `0.1`
 - `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
-- *Extra modification*: use official sampling method to generate the response instead of greedy search.
+- *Extra modification*: use official sampling method to generate the response.
     - `temperature`: `0.9`
     - `top_p`: `0.95`
     - `top_k`: `20`
@@ -143,7 +149,8 @@
 #### Results
 - Training rewards showed no significant difference.
     ![alt text](image-10.png)
-- `val.json` accuracy: `71.19%`
+- `val.json` accuracy: `71.19%` *(not reliable)*
+- `val_200.json` accuracy: `74.00%`
 
 ### Raw_r16_cosine_modified
 #### Setup
@@ -165,4 +172,23 @@
 #### Results
 - Performance at response format dropped a little bit.
     ![alt text](image-11.png)
-- `val_200.json` accuracy: `80.50%`
+- `val_200.json` accuracy: `74.00%`
+
+### Raw_r32_repitition_penalty
+#### Setup
+- `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `32`
+- `learning_rate`: `5e-5`
+- `batch_size`: `24`
+- `num_generations`: `6`
+- `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`, `repetition_penalty_reward`
+- `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+- *Extra modification*: add repetition penalty reward function to penalize the model for generating repeated tokens.
+    - `ngram_size`: `40`
+    - `max_penalty`: `-0.05`
+
+#### Results
+- Better training rewards than that without repetition penalty
+    ![alt text](image-12.png)
+- `val_200.json` accuracy: `78.50%`
