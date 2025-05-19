@@ -21,7 +21,7 @@
 
 ## Ablation Experiments
 
-### Raw_5e-5_Latex
+### Raw_r32P_Latex
 
 #### Setup
 - `train_dataset`: `raw_10k.json`
@@ -41,7 +41,7 @@
     ![alt text](image-1.png)
     ![alt text](image-2.png)
 
-### Raw_5e-5_Plain_ng7_bs28
+### Raw_r32_Plain_ng7_bs28
 
 #### Setup
 - `train_dataset`: `raw_10k.json`
@@ -60,9 +60,8 @@
     ![alt text](image-5.png)
 - On the validation set, the finetuned model generated response following the format required by the system prompt.
     ![alt text](image-3.png)
-- However, the finetuned model only achieved an accuracy of `73.84%` on `val_2k.json`.
 
-### Raw_5e-5_Plain_ng6_bs24
+### Raw_r32_Plain_ng6_bs24
 
 #### Setup
 - `train_dataset`: `raw_10k.json`
@@ -78,7 +77,7 @@
 - Slight difference in the reward function, while `num_generations=6, batch_size=24` is even a little bit better than `num_generations=7, batch_size=28`.
     ![alt text](image-6.png)
 
-### Raw_5e-5_Plain_Len_Reward
+### Raw_r32_Plain_Len_Reward
 #### Setup
 - `train_dataset`: `raw_10k.json`
 - `max_lora_rank`: `32`
@@ -93,8 +92,7 @@
 #### Results
 - Total reward seems a little better than the previous one.
     ![alt text](image-7.png)
-- `val_2k.json` accuracy: `74.64%` *(not reliable)*
-- `val_200.json` accuracy: `76.00%`
+- `val_200.json` accuracy: `76.50%`
 
 ### Raw_r16
 #### Setup
@@ -110,8 +108,7 @@
 #### Results
 - Significant improvement is seen in all reward functions.
     ![alt text](image-8.png)
-- `val_2k.json` accuracy: `74.79%` *(not reliable)*
-- `val_200.json` accuracy: `74.00%`
+- `val_200.json` accuracy: `70.50%`
 
 ### Raw_r8
 #### Setup
@@ -127,8 +124,7 @@
 #### Results
 - Training rewards resemble those of `max_lora_rank=16`.
     ![alt text](image-9.png)
-- `val.json` accuracy: `74.09%` *(not reliable)*
-- `val_200.json` accuracy: `75.50%`
+- `val_200.json` accuracy: `73.50%`
 
 ### Raw_r16_official_sampling
 #### Setup
@@ -140,7 +136,7 @@
 - `max_grad_norm`: `0.1`
 - `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`
 - `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
-- *Extra modification*: use official sampling method to generate the response.
+- *Extra modification*: use official sampling parameters during training.
     - `temperature`: `0.9`
     - `top_p`: `0.95`
     - `top_k`: `20`
@@ -150,7 +146,7 @@
 - Training rewards showed no significant difference.
     ![alt text](image-10.png)
 - `val.json` accuracy: `71.19%` *(not reliable)*
-- `val_200.json` accuracy: `74.00%`
+- `val_200.json` accuracy: `70.00%`
 
 ### Raw_r16_cosine_modified
 #### Setup
@@ -172,9 +168,9 @@
 #### Results
 - Performance at response format dropped a little bit.
     ![alt text](image-11.png)
-- `val_200.json` accuracy: `74.00%`
+- `val_200.json` accuracy: `77.50%`
 
-### Raw_r32_repitition_penalty
+### Raw_r32_repetition_penalty
 #### Setup
 - `train_dataset`: `raw_10k.json`
 - `max_lora_rank`: `32`
@@ -191,4 +187,20 @@
 #### Results
 - Better training rewards than that without repetition penalty
     ![alt text](image-12.png)
-- `val_200.json` accuracy: `78.50%`
+- `val_200.json` accuracy: `67.00%`
+
+### Raw_r32_new_prompt
+#### Setup
+- `train_dataset`: `raw_10k.json`
+- `max_lora_rank`: `32`
+- `learning_rate`: `5e-5`
+- `batch_size`: `24`
+- `num_generations`: `6`
+- `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`, `repetition_penalty_reward`
+- `system_prompt`: "You are a helpful Math assistant. 这是小学数学1-6年级的校内题目，请直接输出数字答案，不带单位。"
+
+#### Results
+- No big difference in training rewards.
+    ![alt text](image-13.png)
+- `val_200.json` accuracy: `71.00%`
