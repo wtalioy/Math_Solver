@@ -10,10 +10,10 @@
 - **Validation Set Accuracy:** 
     - `val_2k.json`
         - "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>": `73.39%`
-    - `val_200.json`
-        - "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>": `74.00%`
-        - "这是小学数学1-6年级的校内题目，无需进行分析，请直接输出数字答案，不带单位。": `74.50%`
-        - "You are a helpful Math assistant. 这是小学数学1-6年级的校内题目，请直接输出数字答案，不带单位。": `76.00%`
+    - `val_300.json`
+        - "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>": `74.33%`
+        - "这是小学数学1-6年级的校内题目，无需进行分析，请直接输出数字答案，不带单位。": `74.67%`
+        - "You are a helpful Math assistant. 这是小学数学1-6年级的校内题目，请直接输出数字答案，不带单位。": `75.00%`
 
 ## Problems
 - The task of solving math problems is extremely sensitive to the randomness of model generation, as the model may take different inference paths, leading to different results and, importantly, high variation in accuracy on validation sets.
@@ -92,7 +92,7 @@
 #### Results
 - Total reward seems a little better than the previous one.
     ![alt text](image-7.png)
-- `val_200.json` accuracy: `76.50%`
+- `val_300.json` accuracy: `75.33%`
 
 ### Raw_r16
 #### Setup
@@ -108,7 +108,7 @@
 #### Results
 - Significant improvement is seen in all reward functions.
     ![alt text](image-8.png)
-- `val_200.json` accuracy: `70.50%`
+- `val_300.json` accuracy: `72.33%`
 
 ### Raw_r8
 #### Setup
@@ -124,7 +124,7 @@
 #### Results
 - Training rewards resemble those of `max_lora_rank=16`.
     ![alt text](image-9.png)
-- `val_200.json` accuracy: `73.50%`
+- `val_300.json` accuracy: `72.33%`
 
 ### Raw_r16_official_sampling
 #### Setup
@@ -145,8 +145,7 @@
 #### Results
 - Training rewards showed no significant difference.
     ![alt text](image-10.png)
-- `val.json` accuracy: `71.19%` *(not reliable)*
-- `val_200.json` accuracy: `70.00%`
+- `val_300.json` accuracy: `69.67%`
 
 ### Raw_r16_cosine_modified
 #### Setup
@@ -162,13 +161,13 @@
     - `cosine_max_len`: `1000`
     - `cosine_min_value_wrong`: `-10.0`
     - `cosine_max_value_wrong`: `0`
-    - `cosine_min_value_correct`: `2.0`
-    - `cosine_max_value_correct`: `1.0`
+    - `cosine_min_value_correct`: `1.0`
+    - `cosine_max_value_correct`: `2.0`
 
 #### Results
 - Performance at response format dropped a little bit.
     ![alt text](image-11.png)
-- `val_200.json` accuracy: `77.50%`
+- `val_300.json` accuracy: `71.00%`
 
 ### Raw_r32_repetition_penalty
 #### Setup
@@ -187,7 +186,7 @@
 #### Results
 - Better training rewards than that without repetition penalty
     ![alt text](image-12.png)
-- `val_200.json` accuracy: `67.00%`
+- `val_300.json` accuracy: `68.33%`
 
 ### Raw_r32_new_prompt
 #### Setup
@@ -197,10 +196,10 @@
 - `batch_size`: `24`
 - `num_generations`: `6`
 - `max_grad_norm`: `0.1`
-- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`, `repetition_penalty_reward`
+- `reward_funcs`: `accuracy_reward`, `cosine_scaled_reward`, `length_reward`
 - `system_prompt`: "You are a helpful Math assistant. 这是小学数学1-6年级的校内题目，请直接输出数字答案，不带单位。"
 
 #### Results
 - No big difference in training rewards.
     ![alt text](image-13.png)
-- `val_200.json` accuracy: `71.00%`
+- `val_300.json` accuracy: `69.33%`
