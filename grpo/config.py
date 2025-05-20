@@ -1,8 +1,9 @@
 from trl import GRPOConfig
 
-experiment_name = "Qwen3-0.6B-GRPO-r32-repetition-penalty"
+experiment_name = "Qwen3-0.6B-GRPO-r32-new-prompt"
 
 max_lora_rank = 32
+prompt_id = 2
 
 class RewardConfig:
     cosine_max_len = 1000
@@ -35,12 +36,11 @@ training_args = GRPOConfig(
     max_prompt_length = 256,
     max_completion_length = 1024,
     reward_weights=[
-        1.0,  # format reward
-        1.0,  # tag count reward
+        # 1.0,  # format reward
+        # 1.0,  # tag count reward
         1.0,  # accuracy reward
         1.0,  # length reward
         1.0,  # cosine reward
-        1.0,  # repetition penalty reward
     ],
 
     max_steps = 360,
@@ -48,7 +48,10 @@ training_args = GRPOConfig(
     report_to = "tensorboard",
     logging_dir = f"logs/{experiment_name}",
     output_dir = f"outputs/{experiment_name}",
-    # log_completions=True,
 )
 
-SYSTEM_PROMPT = "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+SYSTEM_PROMPT = [
+    "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>",
+    "这是小学数学1-6年级的校内题目，无需进行分析，请直接输出数字答案，不带单位。",
+    "You are a helpful Math assistant. 这是小学数学1-6年级的校内题目，请直接输出数字答案，不带单位。"
+]
