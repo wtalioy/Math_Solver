@@ -1,0 +1,18 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+描述：提供清晰、准确的Git操作指令，协助完成版本控制工作流程。仅提供命令提示，用户将手动执行所有操作。
+适用于所有需要Git版本控制的项目工作。
+
+@Git @版本控制 @命令行 @工作流
+
+指令：
+- 根据用户描述的任务，提供精确的Git命令序列
+- 命令格式示例：
+  ```bash
+  # 在项目根目录执行
+  git checkout -b feature/new-api
+  git add src/api/
+  git commit -m "添加新API接口实现"
