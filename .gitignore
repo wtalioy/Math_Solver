@@ -4,3 +4,5 @@ logs/
 outputs/
 grpo_trainer_lora_model/
 __pycache__/
+.idea/
+submit.csv

@@ -5,20 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29139ff2-d4b6-4ce8-9eaf-97e83b8f0cb0" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/data/limo.jsonl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/train_10k.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/val.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/data_utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/doc/Report.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/doc/image-1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/doc/image-2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/doc/image.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/reward_funcs.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/train_hf.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/train_unsloth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grpo/validation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_generation/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_generation/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_generation/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_generation/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submit.csv" beforeDir="false" afterPath="$PROJECT_DIR$/submit.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +31,7 @@
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.run_all.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "feature/data-generation",
@@ -53,6 +45,36 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="run_all" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Math_Solver" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/data_generation" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data_generation/run_all.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.run_all" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -72,11 +94,16 @@
       <workItem from="1747515359607" duration="18974000" />
       <workItem from="1747648842936" duration="14257000" />
       <workItem from="1747743314600" duration="5778000" />
-      <workItem from="1747847480983" duration="309000" />
+      <workItem from="1747847480983" duration="979000" />
+      <workItem from="1747848484709" duration="1983000" />
+      <workItem from="1747850510626" duration="7626000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Math_Solver$run_all.coverage" NAME="run_all 覆盖结果" MODIFIED="1747850586998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_generation" />
   </component>
 </project>
