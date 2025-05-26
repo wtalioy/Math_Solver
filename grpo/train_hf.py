@@ -7,14 +7,13 @@ from peft import get_peft_model, LoraConfig
 from swanlab.integration.transformers import SwanLabCallback
 
 from data_utils import load_custom_dataset
-from config import training_args
-from reward_funcs import format_reward, tag_count_reward, accuracy_reward, len_reward, cosine_scaled_reward
+from config import training_args, experiment_name, max_lora_rank
+from reward_funcs import format_reward, tag_count_reward, accuracy_reward, len_reward, cosine_scaled_reward, get_repetition_penalty_reward
 import os
 
 max_seq_length = 1024
-max_lora_rank = 32
 
-trainset_path = "data/train_10k.json"
+trainset_path = "data/raw_10k.json"
 valset_path = "data/val.json"
 
 if "MODEL_PATH" not in os.environ:
@@ -49,19 +48,20 @@ def main():
 
     # Load the dataset
     train_dataset = load_custom_dataset(trainset_path)
-    val_dataset = load_custom_dataset(valset_path)
 
     # Initialize the SwanLab callback
-    swanlab_callback = SwanLabCallback(
-        workspace="unknown_ft",
-        project="Qwen3-0.6B-GRPO",
-        # experiment_name="Qwen3-0.6B-GRPO",
-        config={
+    swanlab_config = {
+        "workspace": "unknown_ft",
+        "project": "Qwen3-0.6B-GRPO",
+        "experiment_name": experiment_name,
+        "config": {
             "model": os.environ["MODEL_PATH"],
             "dataset": "custom_dataset",
         },
-        log_dir="swanlogs",
-    )
+        "log_dir": "swanlogs",
+    }
+
+    swanlab_callback = SwanLabCallback(**swanlab_config)
 
     # Initialize the GRPO trainer
     trainer = GRPOTrainer(
@@ -70,12 +70,13 @@ def main():
             format_reward,
             tag_count_reward,
             accuracy_reward,
-            # len_reward,
+            len_reward,
             cosine_scaled_reward,
+            get_repetition_penalty_reward(40, -0.05)
         ],
         args=training_args,
         train_dataset=train_dataset,
-        eval_dataset=val_dataset,
+        eval_dataset=None,
         processing_class=tokenizer,
         callbacks=[swanlab_callback],
     )
@@ -85,7 +86,6 @@ def main():
 
     # Save the model
     trainer.save_model(training_args.output_dir)
-
 
 if __name__ == "__main__":
     main()

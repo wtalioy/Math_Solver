@@ -1,6 +1,6 @@
 import json
 from datasets import Dataset
-from config import SYSTEM_PROMPT
+from config import SYSTEM_PROMPT, prompt_id
 
 def load_custom_dataset(file_path):
     """
@@ -23,7 +23,7 @@ def load_custom_dataset(file_path):
             
             if question and answer:
                 prompt = [
-                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "system", "content": SYSTEM_PROMPT[prompt_id]},
                     {"role": "user", "content": question},
                 ]
                 processed_data.append({
