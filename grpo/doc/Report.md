@@ -218,7 +218,21 @@
     ![alt text](image-13.png)
 - `val_300.json` accuracy: `68.33%`
 
+## Ablation Experiments Summary
+
+| Experiment Name             | max_lora_rank   | batch_size   | num_generations   | reward_funcs                                                                 | val_300.json Accuracy   |
+| :-------------------------- | :-------------- | :----------- | :---------------- | :--------------------------------------------------------------------------- | :---------------------- |
+| Baseline         | N/A             | N/A          | N/A               | N/A                                                                          | `74.33%`                |
+| Raw_r32_ng7           | `32`            | `28`         | `7`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward` | `72.67%`                |
+| Raw_r32_ng6_bs24      | `32`            | `24`         | `6`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward` | `71.67%`                |
+| Raw_r32_Len_Reward    | `32`            | `24`         | `6`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward` | `75.67%`                |
+| Raw_r16_Len_Reward    | `16`            | `24`         | `6`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward` | `72.33%`                |
+| Raw_r16               | `16`        | `24`         | `6`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward` | `71.00%`                |
+| Raw_r8                | `8`             | `24`         | `6`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward` | `71.67%`                |
+| Raw_r16_cosine_modified | `8`           | `24`         | `6`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward` | `70.00%`                |
+| Raw_r32_repetition_penalty | `32`       | `24`         | `6`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`, `length_reward`, `repetition_penalty_reward` | `65.33%`                |
+
 ## Conclusion
-GRPO总体的效果并不好，推测原因是：
+GRPO总体的效果并不好，答题准确率相对baseline几乎都有所下降，推测原因是：
 - Deepseek使用GRPO微调主要是为了模型按照特定格式输出答案(think和answer标签)，而Qwen3模型本身已经会推理(think标签)并输出答案(不带标签)，因此GRPO微调的必要性不大。
 - GRPO微调的奖励函数设计可能不够完善，目前的奖励函数主要是针对格式和标签的正确性，以及最终答案的正确性，但没有考虑到模型推理过程的完整性和逻辑性。
