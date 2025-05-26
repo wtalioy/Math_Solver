@@ -41,7 +41,7 @@
     ![alt text](image-1.png)
     ![alt text](image-2.png)
 
-### Raw_r32_Plain_ng7_bs28
+### Raw_r32_Plain_ng7
 
 #### Setup
 - `train_dataset`: `raw_10k.json`
@@ -60,6 +60,7 @@
     ![alt text](image-5.png)
 - On the validation set, the finetuned model generated response following the format required by the system prompt.
     ![alt text](image-3.png)
+- `val_300.json` accuracy: `72.67%`
 
 ### Raw_r32_Plain_ng6_bs24
 
@@ -76,6 +77,7 @@
 #### Results
 - Slight difference in the reward function, while `num_generations=6, batch_size=24` is even a little bit better than `num_generations=7, batch_size=28`.
     ![alt text](image-6.png)
+- `val_300.json` accuracy: `71.67%`
 
 ### Raw_r32_Plain_Len_Reward
 #### Setup
@@ -92,9 +94,9 @@
 #### Results
 - Total reward seems a little better than the previous one.
     ![alt text](image-7.png)
-- `val_300.json` accuracy: `75.33%`
+- `val_300.json` accuracy: `75.67%`
 
-### Raw_r16
+### Raw_r16_Len_Reward
 #### Setup
 - `train_dataset`: `raw_10k.json`
 - `max_lora_rank`: `16`
@@ -110,6 +112,18 @@
     ![alt text](image-8.png)
 - `val_300.json` accuracy: `72.33%`
 
+### Raw_r16
+#### Setup
+- `learning_rate`: `5e-5`
+- `batch_size`: `24`
+- `num_generations`: `6`
+- `max_grad_norm`: `0.1`
+- `reward_funcs`: `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward`
+- `system_prompt`: "You are a helpful Math assistant. Carefully think step by step and enclose your response within <think> </think> and <answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>"
+
+#### Results
+- `val_300.json` accuracy: `71.00%`
+
 ### Raw_r8
 #### Setup
 - `train_dataset`: `raw_10k.json`
@@ -124,7 +138,7 @@
 #### Results
 - Training rewards resemble those of `max_lora_rank=16`.
     ![alt text](image-9.png)
-- `val_300.json` accuracy: `72.33%`
+- `val_300.json` accuracy: `71.67%`
 
 ### Raw_r16_official_sampling
 #### Setup
@@ -167,7 +181,7 @@
 #### Results
 - Performance at response format dropped a little bit.
     ![alt text](image-11.png)
-- `val_300.json` accuracy: `71.00%`
+- `val_300.json` accuracy: `70.00%`
 
 ### Raw_r32_repetition_penalty
 #### Setup
@@ -186,7 +200,7 @@
 #### Results
 - Better training rewards than that without repetition penalty
     ![alt text](image-12.png)
-- `val_300.json` accuracy: `68.33%`
+- `val_300.json` accuracy: `65.33%`
 
 ### Raw_r32_new_prompt
 #### Setup
@@ -202,4 +216,9 @@
 #### Results
 - No big difference in training rewards.
     ![alt text](image-13.png)
-- `val_300.json` accuracy: `69.33%`
+- `val_300.json` accuracy: `68.33%`
+
+## Conclusion
+GRPO总体的效果并不好，推测原因是：
+- Deepseek使用GRPO微调主要是为了模型按照特定格式输出答案(think和answer标签)，而Qwen3模型本身已经会推理(think标签)并输出答案(不带标签)，因此GRPO微调的必要性不大。
+- GRPO微调的奖励函数设计可能不够完善，目前的奖励函数主要是针对格式和标签的正确性，以及最终答案的正确性，但没有考虑到模型推理过程的完整性和逻辑性。
