@@ -220,7 +220,7 @@
 
 ## Ablation Experiments Summary
 
-| Experiment Name             | max_lora_rank   | batch_size   | num_generations   | reward_funcs                                                                 | val_300.json Accuracy   |
+| Experiment Name             | lora_rank   | batch_size   | num_gen   | reward_funcs                                                                 | val_300.json Accuracy   |
 | :-------------------------- | :-------------- | :----------- | :---------------- | :--------------------------------------------------------------------------- | :---------------------- |
 | Baseline         | N/A             | N/A          | N/A               | N/A                                                                          | `74.33%`                |
 | Raw_r32_ng7           | `32`            | `28`         | `7`               | `format_reward`, `tag_count_reward`, `accuracy_reward`, `cosine_scaled_reward` | `72.67%`                |
