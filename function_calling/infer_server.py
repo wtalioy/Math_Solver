@@ -75,17 +75,20 @@ def main():
                 {"role": "user", "content": f"{input_value} /no_think"},
             ]
             logger.info(input_value)
-            for responses in bot.run(messages=messages):
-                pass
-            logger.info(responses)
-            for response in responses[::-1]:
-                if response['role'] == 'assistant':
-                    content = response['content']
-                    answer_parsed = parse_answer(content)
-                    answer_parsed = answer_parsed[0] if len(answer_parsed) > 1 else ""
-                    file.write(f"{id},{answer_parsed}\n")
-                    break
-            logger.info(f"ID: {id}, Answer: {answer_parsed}")
+            try:
+                for responses in bot.run(messages=messages):
+                    pass
+                logger.info(responses)
+                for response in responses[::-1]:
+                    if response['role'] == 'assistant':
+                        content = response['content']
+                        answer_parsed = parse_answer(content)
+                        answer_parsed = answer_parsed[0] if len(answer_parsed) > 1 else ""
+                        file.write(f"{id},{answer_parsed}\n")
+                        break
+                logger.info(f"ID: {id}, Answer: {answer_parsed}")
+            except Exception as e:
+                logger.error(e)
 
         logger.info("All done!")
 
