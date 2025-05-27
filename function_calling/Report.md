@@ -9,6 +9,7 @@
 使用mcp服务`mcp_server_calculator`，调用计算器工具进行数学计算。
 
 ```python
+# More above
 tools = [
     {
         "mcpServers": {
@@ -19,6 +20,7 @@ tools = [
         }
     },
 ]
+bot = Assistant(llm=llm_cfg, function_list=tools, system_message=system_prompt)
 ```
 
 ## 问题
