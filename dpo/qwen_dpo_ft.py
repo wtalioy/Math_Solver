@@ -17,7 +17,7 @@ model = AutoModelForCausalLM.from_pretrained(model_dir, device_map="cuda", torch
 model.enable_input_require_grads()  # 开启梯度检查点时，要执行该方法
 
 # 直接加载已经处理好的DPO数据
-dpo_json_path = "dpo_train_data.json"
+dpo_json_path = "data/dpo_train_data.json"
 
 # 加载数据集
 with open(dpo_json_path, 'r', encoding='utf-8') as file:
