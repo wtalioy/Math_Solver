@@ -46,11 +46,10 @@ This repository provides a comprehensive framework for fine-tuning, evaluating, 
 - Pretrained and fine-tuned model checkpoints are referenced in scripts (e.g., `Qwen2.5-0.5B-Instruct`, `Qwen3-0.6B`). Download or specify paths as needed.
 
 ## Reports & Documentation
-- Each module contains a `Report.md` summarizing methodology, experiments, and results.
-- See `grpo/doc/Report.md` for detailed GRPO experiments and ablation studies.
+- [SFT Report](sft/Report.md): Supervised Fine-Tuning methodology and results
+- [DPO Report](dpo/Report.md): Direct Preference Optimization methodology and results
+- [CoT Report](cot/Report.md): Chain-of-Thought experiments and analysis
+- [Function Calling Report](function_calling/Report.md): Function-calling integration and experiments
+- [GRPO Report](grpo/doc/Report.md): GRPO methodology, ablation studies, and results
 
-## Citation
-If you use this repository, please cite the original authors and models referenced in the code and reports.
-
-## License
-This project is for research and educational purposes. See individual files for third-party license information.
+Each module contains a `Report.md` summarizing methodology, experiments, and results. See the links above for details.
